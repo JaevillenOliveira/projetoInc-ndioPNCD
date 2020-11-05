@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 def plt_hist(df, ano, name):
 	df.plot.hist()
 	
-	plt.ylabel(name)
+	plt.xlabel(name)
 	plt.title(name + 'por ano')
 	plt.savefig(name+'_'+str(ano)+'.png')
 
@@ -22,7 +22,7 @@ def diasemchuva_ano():
 		diasemchuva_df = pd.read_csv('Focos_'+str(ano)+'-01-01_'+str(ano)+'-12-31.csv', usecols=["diasemchuva"])
 		plt_hist(diasemchuva_df, ano, 'Dias sem chuva')
 
-	diasemchuva_df_2020 = pd.read_csv('Focos_2020-01-01_2020-08-13.csv')
+	diasemchuva_df_2020 = pd.read_csv('Focos_2020-01-01_2020-08-13.csv', usecols=["diasemchuva"])
 	plt_hist(diasemchuva_df_2020, 2020, 'Dias sem chuva')
 
 # Este método separa a coluna de precipitacao dos demais dados e passa para o método
@@ -45,4 +45,9 @@ def riscofogo_ano():
 
 	riscofogo_df_2020 = pd.read_csv('Focos_2020-01-01_2020-08-13.csv', usecols=["riscofogo"])
 	plt_hist(riscofogo_df_2020, 2020, 'Risco de fogo')
-riscofogo_ano()
+
+
+precipitacao_ano()
+diasemchuva_ano()
+
+
