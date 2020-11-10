@@ -77,9 +77,9 @@ def plot_map(df_ano, atributo, ano):
 #separando dados para criação da tabela
 def plot_dados(df_ano, cidade):
     #removendo dados desnecessários
-    df_ano = df_ano.drop(columns=['DIRECAO PREDOMINANTE DO VENTO; MENSAL(° (gr))', 'EVAPORACAO DO PICHE; MENSAL(mm)',
+    df_ano = df_ano.drop(columns=['DIRECAO PREDOMINANTE DO VENTO; MENSAL(° (gr))', 
+                                  'EVAPORACAO DO PICHE; MENSAL(mm)',
                                   'EVAPOTRANSPIRACAO POTENCIAL; BH MENSAL(mm)', 'EVAPOTRANSPIRACAO REAL; BH MENSAL(mm)',
-                                  'NUMERO DE DIAS COM PRECIP; PLUV; MENSAL(número)', 'PRECIPITACAO TOTAL; MENSAL(mm)',
                                   'PRESSAO ATMOSFERICA AO NIVEL DO MAR; MEDIA MENSAL(mB)', 'PRESSAO ATMOSFERICA; MEDIA MENSAL(mB)',
                                   'VENTO; VELOCIDADE MAXIMA MENSAL(m/s)',
                                   'VENTO; VELOCIDADE MEDIA MENSAL(m/s)', 'VISIBILIDADE; MEDIA MENSAL(codigo)',

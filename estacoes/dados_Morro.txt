@@ -29,6 +29,36 @@ SET    ||    2.967|6.097|4.382|4.422|7.157
 OUT    ||    3.903|5.041|5.288|4.569|7.157
 NOV    ||    3.793|5.583|6.208|4.234|7.157
 
+ Mês   ||  NUMERO DE DIAS COM PRECIP; PLUV; MENSAL(número)
+------------------------------------------------------
+             2015 |2016 |2018 |2019 |2020
+JAN    ||    nan|nan|nan|nan|nan
+FEV    ||    nan|nan|nan|nan|nan
+MAR    ||    nan|nan|nan|nan|nan
+ABR    ||    nan|nan|nan|nan|nan
+MAI    ||    nan|nan|nan|nan|nan
+JUN    ||    nan|nan|nan|nan|19.0
+JUL    ||    nan|nan|nan|nan|19.0
+AGO    ||    nan|nan|nan|nan|19.0
+SET    ||    nan|nan|nan|nan|19.0
+OUT    ||    nan|nan|nan|nan|19.0
+NOV    ||    nan|nan|nan|nan|19.0
+
+ Mês   ||  PRECIPITACAO TOTAL; MENSAL(mm)
+------------------------------------------------------
+             2015 |2016 |2018 |2019 |2020
+JAN    ||    13.2|362.8|44.8|164.7|244.9
+FEV    ||    74.6|18.6|191.3|79.5|30.6
+MAR    ||    7.7|1.3|114.7|53.7|57.7
+ABR    ||    61.3|7.5|24.9|18.3|111.4
+MAI    ||    37.8|11.8|28.9|50.8|nan
+JUN    ||    51.1|24.4|50.7|38.3|nan
+JUL    ||    37.1|21.0|8.0|34.1|nan
+AGO    ||    38.2|30.0|9.3|23.6|nan
+SET    ||    2.7|35.0|15.7|2.4|nan
+OUT    ||    7.1|33.2|13.8|18.5|nan
+NOV    ||    44.0|57.9|20.7|44.0|nan
+
  Mês   ||  TEMPERATURA MAXIMA MEDIA; MENSAL(°C)
 ------------------------------------------------------
              2015 |2016 |2018 |2019 |2020
