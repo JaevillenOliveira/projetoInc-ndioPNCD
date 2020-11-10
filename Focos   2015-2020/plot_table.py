@@ -9,7 +9,7 @@ ax = fig.add_subplot()
 
 months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro", "Total"]
 
-cols = ["{: }".format(i) for i in range(2015, 2021)]
+cols = ["{: }".format(i) for i in range(2015, 2020)]
 cols.append('Ocorrências')
 cols.append("F.R % (Aprox)")
 
@@ -32,12 +32,12 @@ auxMonth = [
 ]
 
 table_data = []
-total = [0, 0, 0, 0, 0, 0, 0]
+total = [0, 0, 0, 0, 0, 0]
 
 for month in range(12):
     
     line = []
-    for year in range(2015, 2021):
+    for year in range(2015, 2020):
         fileName = 'SplitMonth/Focos_' + str(year) + '_' + auxMonth[month] + '.csv'
         if os.path.exists(fileName):
             df = pd.read_csv(fileName)
@@ -51,7 +51,7 @@ for month in range(12):
         if i != NULO:
             soma += i
             
-    total[6] += soma
+    total[5] += soma
     line.append(soma)
             
     table_data.append(line)
@@ -61,7 +61,7 @@ table_data.append(total)
 
 
 for i in range(len(table_data)):
-    porcento = (table_data[i][6] * 100)/table_data[12][6]
+    porcento = (table_data[i][5] * 100)/table_data[12][5]
     table_data[i].append(round(porcento,2))
     
     
