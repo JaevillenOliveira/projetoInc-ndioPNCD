@@ -13,8 +13,6 @@ cols = ["{: }".format(i) for i in range(2015, 2020)]
 cols.append('Ocorrências')
 cols.append("F.R % (Aprox)")
 
-#cols.append("Ocorrências")
-#cols.append("Frequência Relativa")
 
 auxMonth = [
     "01",
@@ -77,3 +75,6 @@ table.scale(1,2)
 ax.axis('off')
 
 plt.show()
+
+df = pd.DataFrame(table_data, columns=cols, index=months)
+df.to_csv("tabela.csv")
