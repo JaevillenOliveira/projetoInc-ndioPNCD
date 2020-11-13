@@ -38,7 +38,7 @@ for month in range(12):
     
     line = []
     for year in range(2015, 2020):
-        fileName = 'SplitMonth/Focos_' + str(year) + '_' + auxMonth[month] + '.csv'
+        fileName = 'dataset/Focos_' + str(year) + '_' + auxMonth[month] + '.csv'
         if os.path.exists(fileName):
             df = pd.read_csv(fileName)
             line.append(len(df))
@@ -81,6 +81,7 @@ plt.show()
 
 df = pd.DataFrame(table_data, columns=cols, index=months)
 df.to_csv("tabela.csv")
+<<<<<<< HEAD:Focos   2015-2020/plot_table.py
 
 ######################### OCORRÊNCIAS POR ANO
 
@@ -96,3 +97,5 @@ cols = ["{: }".format(i) for i in range(2015, 2020)]
 
 df2 = pd.DataFrame([porano], columns=cols)
 df2.to_csv("tabelaOcorrenciasXAno.csv")
+=======
+>>>>>>> 589a979c3ffe46b78b2e95ef8c5154ebcd9f8c12:Focos   2015-2020/split_by_month/count_ocurrences_by_months_of_years.py
