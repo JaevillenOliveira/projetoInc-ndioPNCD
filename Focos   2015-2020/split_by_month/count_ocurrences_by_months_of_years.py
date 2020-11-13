@@ -36,7 +36,7 @@ for month in range(12):
     
     line = []
     for year in range(2015, 2020):
-        fileName = 'SplitMonth/Focos_' + str(year) + '_' + auxMonth[month] + '.csv'
+        fileName = 'dataset/Focos_' + str(year) + '_' + auxMonth[month] + '.csv'
         if os.path.exists(fileName):
             df = pd.read_csv(fileName)
             line.append(len(df))
