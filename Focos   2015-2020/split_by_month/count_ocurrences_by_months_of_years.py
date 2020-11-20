@@ -81,7 +81,7 @@ plt.show()
 
 df = pd.DataFrame(table_data, columns=cols, index=months)
 df.to_csv("tabela.csv")
-<<<<<<< HEAD:Focos   2015-2020/plot_table.py
+
 
 ######################### OCORRÊNCIAS POR ANO
 
@@ -97,5 +97,19 @@ cols = ["{: }".format(i) for i in range(2015, 2020)]
 
 df2 = pd.DataFrame([porano], columns=cols)
 df2.to_csv("tabelaOcorrenciasXAno.csv")
-=======
->>>>>>> 589a979c3ffe46b78b2e95ef8c5154ebcd9f8c12:Focos   2015-2020/split_by_month/count_ocurrences_by_months_of_years.py
+
+############################ plot 
+
+import matplotlib.pyplot as plt
+
+items = cols
+
+proportions = [porano]
+
+plt.pie(proportions, labels=items, 
+        startangle=20,
+        radius=1.2, autopct='%1.1f%%')
+
+
+plt.title('Ocorrências por ano 2015 - 2019')
+plt.show()
