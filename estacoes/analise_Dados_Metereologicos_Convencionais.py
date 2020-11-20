@@ -179,9 +179,100 @@ def plot_table(cidade, ocorrencias):
                        'TEMPERATURA MINIMA MEDIA; MENSAL(°C)': 'TEMPERATURA MIN', 'UMIDADE RELATIVA DO AR; MEDIA MENSAL(%)': 'UMIDADE AR'}, inplace = True)
 
     render_mpl_table(df)
+
+
+
+#separar estações do ano na tabela da estação
+def estacoes_estacoes(cidade, df, atributo):
+    #separando os meses para estação "VERÃO"
+    aux1 = cidade.loc[0, atributo]
+    aux2 = cidade.loc[1, atributo]
+    aux3 = cidade.loc[2, atributo]
     
+    df.loc['VERAO', atributo] = round((aux1+aux2+aux3)/3, 4)
     
+    #separando os meses para estação "OUTONO"
+    aux1 = cidade.loc[3, atributo]
+    aux2 = cidade.loc[4, atributo]
+    aux3 = cidade.loc[5, atributo]
     
+    df.loc['OUTONO', atributo] = round((aux1+aux2+aux3)/3, 4)
+
+    #separando os meses para estação "INVERNO"
+    aux1 = cidade.loc[6, atributo]
+    aux2 = cidade.loc[7, atributo]
+    aux3 = cidade.loc[8, atributo]
+    
+    df.loc['INVERNO', atributo] = round((aux1+aux2+aux3)/3, 4)
+    
+    #separando os meses para estação "PRIMAVERA"
+    aux1 = cidade.loc[9, atributo]
+    aux2 = cidade.loc[10, atributo]
+    aux3 = cidade.loc[11, atributo]
+    
+    df.loc['PRIMAVERA', atributo] = round((aux1+aux2+aux3)/3, 4)
+
+
+
+#separar estações do ano na tabela de ocorrências
+def estacoes_ocorrencia(ocorrencias, df):
+    #separando os meses para estação "VERÃO"
+    aux1 = ocorrencias[0]
+    aux2 = ocorrencias[1]
+    aux3 = ocorrencias[2]
+    
+    df.loc['VERAO', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
+    
+    #separando os meses para estação "OUTONO"
+    aux1 = ocorrencias[3]
+    aux2 = ocorrencias[4]
+    aux3 = ocorrencias[5]
+
+    df.loc['OUTONO', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
+    
+    #separando os meses para estação "INVERNO"
+    aux1 = ocorrencias[6]
+    aux2 = ocorrencias[7]
+    aux3 = ocorrencias[8]
+    
+    df.loc['INVERNO', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
+    
+    #separando os meses para estação "PRIMAVERA"
+    aux1 = ocorrencias[9]
+    aux2 = ocorrencias[10]
+    aux3 = ocorrencias[11]
+    
+    df.loc['PRIMAVERA', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
+
+
+
+#tabela relacionando com as estações do ano
+def plot_estacoes(cidade, ocorrencias):
+    cidade = cidade.reset_index(drop=True) #resetando o index da cidade que recebe a cada ano
+    ocorrencias = ocorrencias.reset_index(drop=True) #resetando o index das ocorrencias que recebe a cada ano
+    
+    columns = ['PRECIPITACAO TOTAL; MENSAL(mm)', 'OCORRENCIAS']
+    rows = ['VERAO', 'OUTONO', 'INVERNO', 'PRIMAVERA']
+    
+    #criação do dataframe
+    df = pd.DataFrame(index=rows, columns=columns) 
+    
+    percorrer = ['PRECIPITACAO TOTAL; MENSAL(mm)']
+    
+    for atributo in percorrer:
+        estacoes_estacoes(cidade, df, atributo)
+     
+        estacoes_ocorrencia(ocorrencias, df)
+    
+        df.reset_index(level=0, inplace=True)
+
+        #renomeando colunas
+        df.rename(columns={'PRECIPITACAO TOTAL; MENSAL(mm)': 'PRECIPITACAO'}, inplace = True)
+
+        render_mpl_table(df)
+    
+
+ 
 #transformando tabela em imagem. Retirado de "https://www.semicolonworld.com/question/58193/how-to-save-the-pandas-dataframe-series-data-as-a-figure"
 def render_mpl_table(data, col_width=10, row_height=0.625, font_size=11,
                      header_color='#40466e', row_colors=['#f1f1f2', 'w'], edge_color='w',
@@ -241,19 +332,30 @@ def main():
     #dataframe das informações
     df_morro =  pd.read_csv('.\\estacoes\\dados_Morro.csv')
     df_lencois =  pd.read_csv('.\\estacoes\\dados_Lencois.csv')
+    
 
     #dataframe das ocorrências
     ocorrencias = pd.read_csv('.\\Gráficos_Tabelas\\ocorrencias_por_mes_ano.csv')
     
+    
     anos = [2015, 2016, 2017, 2018, 2019]
+    
+    
+    '''
+    #criação de tabelas por mês
+    
     for ano in anos:
-        #plot_table(df_morro.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)])
+        plot_table(df_morro.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)])
         plot_table(df_lencois.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)])
-        
-    
-    
-    
+    ''' 
+
+    #criação de tabelas por estações do ano       
+    for ano in anos:
+        plot_estacoes(df_morro.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)])
+        plot_estacoes(df_lencois.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)])
 
     
+
 if __name__ == '__main__': # chamada da funcao principal
     main() 
+    
