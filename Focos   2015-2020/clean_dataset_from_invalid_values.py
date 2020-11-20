@@ -21,9 +21,9 @@ def clean():
         print('In file: '+file)
         for index, row in focos.iterrows():       
             for column in columns_to_fix:    
-                if(row[column] == -999):
+                if(row[column] == -999): # -999 is an invalid value, as told by INPE
                     print('At Row: '+str(index)+ ' Column: '+column+ 'Value: '+str(row[column]))
-                    focos.at[index, column] = np.nan 
+                    focos.at[index, column] = np.nan
             
         focos.to_csv(file)    
 
