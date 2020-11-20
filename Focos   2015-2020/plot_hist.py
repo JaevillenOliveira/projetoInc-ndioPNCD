@@ -49,5 +49,6 @@ def riscofogo_ano():
 
 precipitacao_ano()
 diasemchuva_ano()
+riscofogo_ano()
 
 
