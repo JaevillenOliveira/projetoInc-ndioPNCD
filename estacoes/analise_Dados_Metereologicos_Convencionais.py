@@ -183,68 +183,71 @@ def plot_table(cidade, ocorrencias):
 
 
 #separar estações do ano na tabela da estação
-def estacoes_estacoes(cidade, df, atributo):
+#def estacoes_estacoes(cidade, df, atributo):
+def estacoes_estacoes(cidade, ano, atributo):
     #separando os meses para estação "VERÃO"
     aux1 = cidade.loc[0, atributo]
     aux2 = cidade.loc[1, atributo]
     aux3 = cidade.loc[2, atributo]
-    
-    df.loc['VERAO', atributo] = round((aux1+aux2+aux3)/3, 4)
+    verao = round((aux1+aux2+aux3)/3, 4)
+    #df.loc['VERAO', atributo] = round((aux1+aux2+aux3)/3, 4)
     
     #separando os meses para estação "OUTONO"
     aux1 = cidade.loc[3, atributo]
     aux2 = cidade.loc[4, atributo]
     aux3 = cidade.loc[5, atributo]
-    
-    df.loc['OUTONO', atributo] = round((aux1+aux2+aux3)/3, 4)
+    outono = round((aux1+aux2+aux3)/3, 4)
+    #df.loc['OUTONO', atributo] = round((aux1+aux2+aux3)/3, 4)
 
     #separando os meses para estação "INVERNO"
     aux1 = cidade.loc[6, atributo]
     aux2 = cidade.loc[7, atributo]
     aux3 = cidade.loc[8, atributo]
-    
-    df.loc['INVERNO', atributo] = round((aux1+aux2+aux3)/3, 4)
+    inverno = round((aux1+aux2+aux3)/3, 4)
+    #df.loc['INVERNO', atributo] = round((aux1+aux2+aux3)/3, 4)
     
     #separando os meses para estação "PRIMAVERA"
     aux1 = cidade.loc[9, atributo]
     aux2 = cidade.loc[10, atributo]
     aux3 = cidade.loc[11, atributo]
-    
-    df.loc['PRIMAVERA', atributo] = round((aux1+aux2+aux3)/3, 4)
-
+    primavera = round((aux1+aux2+aux3)/3, 4)
+    #df.loc['PRIMAVERA', atributo] = round((aux1+aux2+aux3)/3, 4)
+    dictEstacoes = {'ANO': ano, 'VERAO': verao, 'OUTONO': outono, 'INVERNO': inverno, 'PRIMAVERA': primavera}
+    return dictEstacoes
 
 
 #separar estações do ano na tabela de ocorrências
-def estacoes_ocorrencia(ocorrencias, df):
+#def estacoes_ocorrencia(ocorrencias, df):
+def estacoes_ocorrencia(ocorrencias, ano):
     #separando os meses para estação "VERÃO"
     aux1 = ocorrencias[0]
     aux2 = ocorrencias[1]
     aux3 = ocorrencias[2]
-    
-    df.loc['VERAO', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
+    verao = round((aux1+aux2+aux3), 4)
+    #df.loc['VERAO', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
     
     #separando os meses para estação "OUTONO"
     aux1 = ocorrencias[3]
     aux2 = ocorrencias[4]
     aux3 = ocorrencias[5]
-
-    df.loc['OUTONO', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
+    outono = round((aux1+aux2+aux3), 4)
+    #df.loc['OUTONO', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
     
     #separando os meses para estação "INVERNO"
     aux1 = ocorrencias[6]
     aux2 = ocorrencias[7]
     aux3 = ocorrencias[8]
-    
-    df.loc['INVERNO', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
+    inverno = round((aux1+aux2+aux3), 4)
+    #df.loc['INVERNO', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
     
     #separando os meses para estação "PRIMAVERA"
     aux1 = ocorrencias[9]
     aux2 = ocorrencias[10]
     aux3 = ocorrencias[11]
-    
-    df.loc['PRIMAVERA', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
-
-
+    primavera = round((aux1+aux2+aux3), 4)
+    #df.loc['PRIMAVERA', 'OCORRENCIAS'] = round((aux1+aux2+aux3), 4)
+    dictOcorrencias = {'ANO': ano, 'VERAO': verao, 'OUTONO': outono, 'INVERNO': inverno, 'PRIMAVERA': primavera}
+    return dictOcorrencias
 
 #tabela relacionando com as estações do ano
 def plot_estacoes(cidade, ocorrencias):
@@ -298,8 +301,61 @@ def render_mpl_table(data, col_width=10, row_height=0.625, font_size=11,
     return ax
 
     render_mpl_table(data, header_columns=0, col_width=2.0)   
+
+def atributoAnos(atributo, df_morro, df_lencois, ocorrencias):
+    anos = [2015, 2016, 2017, 2018, 2019]
+    listaEstacaoM = []
+    listaOcorrenciaM = []
+    listaEstacaoL = []
+    listaOcorrenciaL = []
+    for ano in anos:
+        listaMorro = ocorrenciaEstacoes(df_morro.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)], ano, atributo, listaEstacaoM, listaOcorrenciaM)
+        listaLencois = ocorrenciaEstacoes(df_lencois.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)], ano, atributo, listaEstacaoL, listaOcorrenciaL)
+
+        listaEstacaoM.append(listaMorro[0])
+        listaOcorrenciaM.append(listaMorro[1])
+        listaEstacaoL.append(listaLencois[0])
+        listaOcorrenciaL.append(listaLencois[1])
+    plotOcorrenciaEstacoes(somaEstacoes(listaEstacaoM, 2), somaEstacoes(listaOcorrenciaM, 1), atributo, ano, 'Morro')
+    plotOcorrenciaEstacoes(somaEstacoes(listaEstacaoL, 2), somaEstacoes(listaOcorrenciaL, 1), atributo, ano, 'Lencois')
     
 
+def somaEstacoes(lista, n):
+    veraoSoma = 0
+    outonoSoma = 0
+    invernoSoma = 0
+    primaveraSoma = 0
+    for dicionario in lista:
+        veraoSoma += dicionario['VERAO']
+        outonoSoma += dicionario['OUTONO']
+        invernoSoma += dicionario['INVERNO']
+        primaveraSoma += dicionario['PRIMAVERA']
+    dictSoma = {'VERAO': (veraoSoma/n), 'OUTONO': (outonoSoma/n), 'INVERNO': (invernoSoma/n), 'PRIMAVERA': (primaveraSoma/n)}
+    return dictSoma
+
+def ocorrenciaEstacoes(cidade, ocorrencias, ano, atributo, listaEstacao, listaOcorrencia):
+    cidade = cidade.reset_index(drop=True) #resetando o index da cidade que recebe a cada ano
+    ocorrencias = ocorrencias.reset_index(drop=True) #resetando o index das ocorrencias que recebe a cada ano
+    
+    listaGeral = []
+    listaEstacao.append(estacoes_estacoes(cidade, ano, atributo))
+    listaOcorrencia.append(estacoes_ocorrencia(ocorrencias, ano))
+    listaGeral.append(listaEstacao)
+    listaGeral.append(listaOcorrencia)
+    return listaGeral
+        
+#def plotOcorrenciaEstacoes(df_ano, atributo, ano):
+def plotOcorrenciaEstacoes(dictEstacao, dictOcorrencia, atributo, ano, cidade):
+    rows = ['VERAO', 'OUTONO', 'INVERNO', 'PRIMAVERA']
+    plt.bar(rows, dictOcorrencia, color='#37777D')
+    plt.plot(rows, dictEstacao, color='r', marker='^', linestyle='-', linewidth=2)
+    
+    plt.xticks(rows)
+    plt.ylabel(atributo)
+    plt.title('Ocorrências x ' + str(atributo) + ' por estações de '+ str(ano))
+    plt.savefig('TESTE' +atributo+ cidade +'.png')
+    
+    plt.close()
 
 def main():
     '''
@@ -332,6 +388,7 @@ def main():
     #dataframe das informações
     df_morro =  pd.read_csv('.\\estacoes\\dados_Morro.csv')
     df_lencois =  pd.read_csv('.\\estacoes\\dados_Lencois.csv')
+    colunas = df_morro.columns.tolist()
     
 
     #dataframe das ocorrências
@@ -350,10 +407,16 @@ def main():
     ''' 
 
     #criação de tabelas por estações do ano       
-    for ano in anos:
-        plot_estacoes(df_morro.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)])
-        plot_estacoes(df_lencois.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)])
-
+    '''for ano in anos:
+        #plot_estacoes(df_morro.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)])
+        #plot_estacoes(df_lencois.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)])
+        exemplo(df_morro.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)], ano)
+        exemplo(df_lencois.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)], ano)
+    '''
+    coluna = ['INSOLACAO TOTAL; MENSAL(h)', 'PRECIPITACAO TOTAL; MENSAL(mm)',
+              'TEMPERATURA MEDIA COMPENSADA; MENSAL(°C)', 'UMIDADE RELATIVA DO AR; MEDIA MENSAL(%)']
+    for atributo in coluna:
+        atributoAnos(atributo, df_morro, df_lencois, ocorrencias)
     
 
 if __name__ == '__main__': # chamada da funcao principal
