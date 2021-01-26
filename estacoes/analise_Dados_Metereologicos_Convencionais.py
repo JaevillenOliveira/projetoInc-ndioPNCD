@@ -199,7 +199,12 @@ def estacoes_estacoes(cidade, df, atributo, ano, anos):
     aux2 = cidade.loc[4, atributo]
     aux3 = cidade.loc[5, atributo]
     
-    df.loc['OUTONO', atributo] += round((aux1+aux2+aux3)/3, 4)
+    
+    if(math.isnan(aux1)):
+        df.loc['OUTONO', atributo] += round((aux2+aux3)/3, 4)
+        #print('aqui')
+    else:
+        df.loc['OUTONO', atributo] += round((aux1+aux2+aux3)/3, 4)
     if ano == 2019:
         df.loc['OUTONO', atributo] = df.loc['OUTONO', atributo]/len(anos)
 
@@ -234,37 +239,37 @@ def estacoes_ocorrencia(ocorrencias, df, ano, anos):
     aux3 = ocorrencias[2]
 
     
-    df.loc['VERAO', 'OCORRENCIAS'] += round((aux1+aux2+aux3)/3, 4)
-    if ano == 2019:
-        df.loc['VERAO', 'OCORRENCIAS'] = df.loc['VERAO', 'OCORRENCIAS']/len(anos)
+    df.loc['VERAO', 'OCORRENCIAS'] += round((aux1+aux2+aux3), 4)
+    '''if ano == 2019:
+        df.loc['VERAO', 'OCORRENCIAS'] = df.loc['VERAO', 'OCORRENCIAS']/len(anos)'''
     
     #separando os meses para estação "OUTONO"
     aux1 = ocorrencias[3]
     aux2 = ocorrencias[4]
     aux3 = ocorrencias[5]
 
-    df.loc['OUTONO', 'OCORRENCIAS'] += round((aux1+aux2+aux3)/3, 4)
+    df.loc['OUTONO', 'OCORRENCIAS'] += round((aux1+aux2+aux3), 4)
     #print(df.loc['OUTONO', 'OCORRENCIAS'])
-    if ano == 2019:
-        df.loc['OUTONO', 'OCORRENCIAS'] = df.loc['OUTONO', 'OCORRENCIAS']/len(anos)
+    '''if ano == 2019:
+        df.loc['OUTONO', 'OCORRENCIAS'] = df.loc['OUTONO', 'OCORRENCIAS']/len(anos)'''
     
     #separando os meses para estação "INVERNO"
     aux1 = ocorrencias[6]
     aux2 = ocorrencias[7]
     aux3 = ocorrencias[8]
     
-    df.loc['INVERNO', 'OCORRENCIAS'] += round((aux1+aux2+aux3)/3, 4)
-    if ano == 2019:
-        df.loc['INVERNO', 'OCORRENCIAS'] = df.loc['INVERNO', 'OCORRENCIAS']/len(anos)
+    df.loc['INVERNO', 'OCORRENCIAS'] += round((aux1+aux2+aux3), 4)
+    '''if ano == 2019:
+        df.loc['INVERNO', 'OCORRENCIAS'] = df.loc['INVERNO', 'OCORRENCIAS']/len(anos)'''
     
     #separando os meses para estação "PRIMAVERA"
     aux1 = ocorrencias[9]
     aux2 = ocorrencias[10]
     aux3 = ocorrencias[11]
     
-    df.loc['PRIMAVERA', 'OCORRENCIAS'] += round((aux1+aux2+aux3)/3, 4)
-    if ano == 2019:
-        df.loc['PRIMAVERA', 'OCORRENCIAS'] = df.loc['PRIMAVERA', 'OCORRENCIAS']/len(anos)
+    df.loc['PRIMAVERA', 'OCORRENCIAS'] += round((aux1+aux2+aux3), 4)
+    '''if ano == 2019:
+        df.loc['PRIMAVERA', 'OCORRENCIAS'] = df.loc['PRIMAVERA', 'OCORRENCIAS']/len(anos)'''
 
 
 
@@ -324,7 +329,7 @@ def render_mpl_table(data, col_width=10, row_height=0.625, font_size=11,
 
 
 ''' Cria dataFrame de um atributo e suas ocorrencias por estação e adiciona os seus valores. '''
-def atributoEstacao(atributo, df_lencois, ocorrencias, anos):
+def atributoEstacao(atributo, df_lencois, df_piata, ocorrencias, anos):
     #splitAtributo = atributo.split(';')
     columns = [atributo, 'OCORRENCIAS']
     rows = ['VERAO', 'OUTONO', 'INVERNO', 'PRIMAVERA']
@@ -332,12 +337,18 @@ def atributoEstacao(atributo, df_lencois, ocorrencias, anos):
     #criação do dataframe
     dfLencois = pd.DataFrame(index=rows, columns=columns)
     dfLencois.fillna(0,inplace=True)
+    dfPiata = pd.DataFrame(index=rows, columns=columns)
+    dfPiata.fillna(0,inplace=True)
     
     for ano in anos:
         ocorrenciaEstacoes(df_lencois.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)], atributo, dfLencois, ano, anos)
+        if(atributo != 'INSOLACAO TOTAL; MENSAL(h)'):
+            ocorrenciaEstacoes(df_piata.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)], atributo, dfPiata, ano, anos)
     dfLencois.reset_index(level=0, inplace=True)
+    if(atributo != 'INSOLACAO TOTAL; MENSAL(h)'):
+        dfPiata.reset_index(level=0, inplace=True)
     
-    plotOcorrenciaEstacoes(dfLencois, rows, atributo, 'Estacao')
+    plotOcorrenciaEstacoes(dfLencois, dfPiata, rows, atributo, 'Estacao')
 
 
 
@@ -352,16 +363,22 @@ def ocorrenciaEstacoes(cidade, ocorrencias, atributo, df, ano, anos):
     
     
 ''' Cria dataFrame de um atributo e suas ocorrencias por mes e adiciona os seus valores. '''
-def atributoAno(atributo, df_lencois, ocorrencias, anos):
+def atributoAno(atributo, df_lencois, df_piata, ocorrencias, anos):
     columns = [atributo, 'OCORRENCIAS']
     rows = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ']
     dfLencois = pd.DataFrame(index=rows, columns=columns)
     dfLencois.fillna(0,inplace=True)
+    dfPiata = pd.DataFrame(index=rows, columns=columns)
+    dfPiata.fillna(0,inplace=True)
     
     ocorrenciaMeses(ocorrencias[str('Ocorrências')], atributo, df_lencois, dfLencois, rows, anos)
+    if(atributo != 'INSOLACAO TOTAL; MENSAL(h)'):
+        ocorrenciaMeses(ocorrencias[str('Ocorrências')], atributo, df_piata, dfPiata, rows, anos)
     
     dfLencois.reset_index(level=0, inplace=True)
-    plotOcorrenciaEstacoes(dfLencois, rows, atributo, 'Mes')
+    if(atributo != 'INSOLACAO TOTAL; MENSAL(h)'):
+        dfPiata.reset_index(level=0, inplace=True)
+    plotOcorrenciaEstacoes(dfLencois, dfPiata, rows, atributo, 'Mes')
 
 
 
@@ -370,14 +387,16 @@ def ocorrenciaMeses(ocorrencias, atributo, df, dfOcorrencias, rows, anos):
     for i in range(12):
         df_mes = df[df[df.columns[0]].str.contains(rows[i])]
         
-        dfOcorrencias.loc[rows[i], atributo] = df_mes[atributo].median()
-        dfOcorrencias.loc[rows[i], 'OCORRENCIAS'] = ocorrencias[i]/len(anos)
+        dfOcorrencias.loc[rows[i], atributo] = df_mes[atributo].mean()
+        dfOcorrencias.loc[rows[i], 'OCORRENCIAS'] = ocorrencias[i]
     
 
 ''' Cria o gráfico de Ocorrências x Mês/Estação. '''
-def plotOcorrenciaEstacoes(df, rows, atributo, aux):
+def plotOcorrenciaEstacoes(df, df2, rows, atributo, aux):
     splitAtributo = atributo.split(';')
     splitAtributo = splitAtributo[0]
+    auxAtributo = atributo.split('MENSAL')
+    auxAtributo = auxAtributo[1]
     
     
     fig, ax1 = plt.subplots()
@@ -395,17 +414,41 @@ def plotOcorrenciaEstacoes(df, rows, atributo, aux):
     ax2 = ax1.twinx()
     # Plotar
    
-    ax1.bar(rows, df['OCORRENCIAS'], color='#37777D')
-    ax1.set_ylabel("OCORRENCIAS (barra)")
-    ax2.plot(rows, df[atributo], color='r', marker='^', linestyle='-', linewidth=2)
-    ax2.set_ylabel(str(splitAtributo)+" (linha)")
-    plt.title('Ocorrências x ' + str(splitAtributo) + ' 2015 - 2019')
+    ax1.bar(rows, df['OCORRENCIAS'], color='#37777D', label = 'Ocorrências')
+    ax1.set_ylabel("OCORRENCIAS")
+    ax2.plot(rows, df[atributo], color='r', marker='^', linestyle='-', linewidth=2, label = splitAtributo.capitalize() + auxAtributo + ' - Lençóis')
+    if(atributo != 'INSOLACAO TOTAL; MENSAL(h)'):
+        ax2.plot(rows, df2[atributo], color='g', marker='^', linestyle='-', linewidth=2, label = splitAtributo.capitalize() + auxAtributo + ' - Piatã')
+    #ax1.legend(loc=0)
+    ax2.set_ylabel(str(splitAtributo  + auxAtributo))
     
+    lines, labels = ax1.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax2.legend(lines + lines2, labels + labels2, loc="upper right")
+    #ax2.legend(loc=0)
+    #plt.title('Ocorrências x ' + str(splitAtributo) + ' 2015 - 2019')
+    #plt.legend(loc="upper left")
     plt.savefig(splitAtributo + '_' + aux + '.png')
 
     # Plotando o Gráfico
     plt.figure();
+'''
 
+lns1 = ax.plot(time, Swdown, '-', label = 'Swdown')
+lns2 = ax.plot(time, Rn, '-', label = 'Rn')
+ax2 = ax.twinx()
+lns3 = ax2.plot(time, temp, '-r', label = 'temp')
+
+# added these three lines
+lns = lns1+lns2+lns3
+labs = [l.get_label() for l in lns]
+ax.legend(lns, labs, loc=0)
+
+lns = ax1 + ax2
+labs = [l.get_label() for l in lns]
+ax.legend(lns, labs, loc=0)
+
+'''
 
 
 def main():
@@ -438,8 +481,16 @@ def main():
     #dataframe das informações
     #df_morro =  pd.read_csv('.\\estacoes\\dados_Morro.csv')
     df_lencois =  pd.read_csv('.\\estacoes\\dados_Lencois.csv')
-    #colunas = df_morro.columns.tolist()
+    df_lencois = df_lencois.rename(columns={'TEMPERATURA MEDIA COMPENSADA; MENSAL(°C)': 'TEMPERATURA MEDIA; MENSAL(°C)'})
     
+    df_piata =  pd.read_csv('.\\estacoes\\dados_Piata.csv')
+    df_piata = df_piata.rename(columns={'Mes': 'Data Medicao'})
+    df_piata = df_piata.rename(columns={'Ano': 'Ano Medicao'})
+    df_piata = df_piata.rename(columns={'PRECIPITACAO TOTAL; DIARIO (AUT)(mm)': 'PRECIPITACAO TOTAL; MENSAL(mm)'})
+    df_piata = df_piata.rename(columns={'TEMPERATURA MEDIA; DIARIA (AUT)(Â°C)': 'TEMPERATURA MEDIA; MENSAL(°C)'})
+    df_piata = df_piata.rename(columns={'UMIDADE RELATIVA DO AR; MEDIA DIARIA (AUT)(%)': 'UMIDADE RELATIVA DO AR; MEDIA MENSAL(%)'})
+    
+    df_piata = df_piata[['Data Medicao','PRECIPITACAO TOTAL; MENSAL(mm)','TEMPERATURA MEDIA; MENSAL(°C)','UMIDADE RELATIVA DO AR; MEDIA MENSAL(%)','Ano Medicao']]
 
     #dataframe das ocorrências
     ocorrencias = pd.read_csv('.\\Gráficos_Tabelas\\ocorrencias_por_mes_ano.csv')
@@ -464,11 +515,11 @@ def main():
         exemplo(df_lencois.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)], ano)'''
     
     coluna = ['INSOLACAO TOTAL; MENSAL(h)', 'PRECIPITACAO TOTAL; MENSAL(mm)',
-              'TEMPERATURA MEDIA COMPENSADA; MENSAL(°C)', 'UMIDADE RELATIVA DO AR; MEDIA MENSAL(%)']
+              'TEMPERATURA MEDIA; MENSAL(°C)', 'UMIDADE RELATIVA DO AR; MEDIA MENSAL(%)']
     
     for atributo in coluna:
-        atributoEstacao(atributo, df_lencois, ocorrencias, anos)
-        atributoAno(atributo, df_lencois, ocorrencias, anos)
+        atributoEstacao(atributo, df_lencois, df_piata, ocorrencias, anos)
+        atributoAno(atributo, df_lencois, df_piata, ocorrencias, anos)
 
 
 
