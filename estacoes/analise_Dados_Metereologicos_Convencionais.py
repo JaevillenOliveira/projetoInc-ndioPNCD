@@ -213,7 +213,11 @@ def estacoes_estacoes(cidade, df, atributo, ano, anos):
     aux2 = cidade.loc[7, atributo]
     aux3 = cidade.loc[8, atributo]
     
-    df.loc['INVERNO', atributo] += round((aux1+aux2+aux3)/3, 4)
+    if(math.isnan(aux2)):
+        df.loc['INVERNO', atributo] += round((aux1+aux3)/3, 4)
+        #print('aqui')
+    else:
+        df.loc['INVERNO', atributo] += round((aux1+aux2+aux3)/3, 4)
     if ano == 2019:
         df.loc['INVERNO', atributo] = df.loc['INVERNO', atributo]/len(anos)
     
@@ -329,7 +333,7 @@ def render_mpl_table(data, col_width=10, row_height=0.625, font_size=11,
 
 
 ''' Cria dataFrame de um atributo e suas ocorrencias por estação e adiciona os seus valores. '''
-def atributoEstacao(atributo, df_lencois, df_piata, ocorrencias, anos):
+def atributoEstacao(atributo, df_lencois, df_piata, df_itirucu, ocorrencias, anos):
     #splitAtributo = atributo.split(';')
     columns = [atributo, 'OCORRENCIAS']
     rows = ['VERAO', 'OUTONO', 'INVERNO', 'PRIMAVERA']
@@ -339,16 +343,21 @@ def atributoEstacao(atributo, df_lencois, df_piata, ocorrencias, anos):
     dfLencois.fillna(0,inplace=True)
     dfPiata = pd.DataFrame(index=rows, columns=columns)
     dfPiata.fillna(0,inplace=True)
+    dfItirucu = pd.DataFrame(index=rows, columns=columns)
+    dfItirucu.fillna(0,inplace=True)
+    
     
     for ano in anos:
         ocorrenciaEstacoes(df_lencois.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)], atributo, dfLencois, ano, anos)
         if(atributo != 'INSOLACAO TOTAL; MENSAL(h)'):
             ocorrenciaEstacoes(df_piata.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)], atributo, dfPiata, ano, anos)
+            ocorrenciaEstacoes(df_itirucu.query("`Ano Medicao` == " + str(ano)), ocorrencias[' '+ str(ano)], atributo, dfItirucu, ano, anos)
     dfLencois.reset_index(level=0, inplace=True)
     if(atributo != 'INSOLACAO TOTAL; MENSAL(h)'):
         dfPiata.reset_index(level=0, inplace=True)
+        dfItirucu.reset_index(level=0, inplace=True)
     
-    plotOcorrenciaEstacoes(dfLencois, dfPiata, rows, atributo, 'Estacao')
+    plotOcorrenciaEstacoes(dfLencois, dfPiata, dfItirucu, rows, atributo, 'Estacao')
 
 
 
@@ -363,22 +372,26 @@ def ocorrenciaEstacoes(cidade, ocorrencias, atributo, df, ano, anos):
     
     
 ''' Cria dataFrame de um atributo e suas ocorrencias por mes e adiciona os seus valores. '''
-def atributoAno(atributo, df_lencois, df_piata, ocorrencias, anos):
+def atributoAno(atributo, df_lencois, df_piata, df_itirucu, ocorrencias, anos):
     columns = [atributo, 'OCORRENCIAS']
     rows = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ']
     dfLencois = pd.DataFrame(index=rows, columns=columns)
     dfLencois.fillna(0,inplace=True)
     dfPiata = pd.DataFrame(index=rows, columns=columns)
     dfPiata.fillna(0,inplace=True)
+    dfItirucu = pd.DataFrame(index=rows, columns=columns)
+    dfItirucu.fillna(0,inplace=True)
     
     ocorrenciaMeses(ocorrencias[str('Ocorrências')], atributo, df_lencois, dfLencois, rows, anos)
     if(atributo != 'INSOLACAO TOTAL; MENSAL(h)'):
         ocorrenciaMeses(ocorrencias[str('Ocorrências')], atributo, df_piata, dfPiata, rows, anos)
+        ocorrenciaMeses(ocorrencias[str('Ocorrências')], atributo, df_itirucu, dfItirucu, rows, anos)
     
     dfLencois.reset_index(level=0, inplace=True)
     if(atributo != 'INSOLACAO TOTAL; MENSAL(h)'):
         dfPiata.reset_index(level=0, inplace=True)
-    plotOcorrenciaEstacoes(dfLencois, dfPiata, rows, atributo, 'Mes')
+        dfItirucu.reset_index(level=0, inplace=True)
+    plotOcorrenciaEstacoes(dfLencois, dfPiata, dfItirucu, rows, atributo, 'Mes')
 
 
 
@@ -392,7 +405,7 @@ def ocorrenciaMeses(ocorrencias, atributo, df, dfOcorrencias, rows, anos):
     
 
 ''' Cria o gráfico de Ocorrências x Mês/Estação. '''
-def plotOcorrenciaEstacoes(df, df2, rows, atributo, aux):
+def plotOcorrenciaEstacoes(df, df2, df3, rows, atributo, aux):
     splitAtributo = atributo.split(';')
     splitAtributo = splitAtributo[0]
     auxAtributo = atributo.split('MENSAL')
@@ -418,7 +431,8 @@ def plotOcorrenciaEstacoes(df, df2, rows, atributo, aux):
     ax1.set_ylabel("OCORRENCIAS")
     ax2.plot(rows, df[atributo], color='r', marker='^', linestyle='-', linewidth=2, label = splitAtributo.capitalize() + auxAtributo + ' - Lençóis')
     if(atributo != 'INSOLACAO TOTAL; MENSAL(h)'):
-        ax2.plot(rows, df2[atributo], color='g', marker='^', linestyle='-', linewidth=2, label = splitAtributo.capitalize() + auxAtributo + ' - Piatã')
+        ax2.plot(rows, df2[atributo], color='g', marker='s', linestyle='-', linewidth=2, label = splitAtributo.capitalize() + auxAtributo + ' - Piatã')
+        ax2.plot(rows, df3[atributo], color='m', marker='o', linestyle='-', linewidth=2, label = splitAtributo.capitalize() + auxAtributo + ' - Itiruçu')
     #ax1.legend(loc=0)
     ax2.set_ylabel(str(splitAtributo  + auxAtributo))
     
@@ -492,6 +506,16 @@ def main():
     
     df_piata = df_piata[['Data Medicao','PRECIPITACAO TOTAL; MENSAL(mm)','TEMPERATURA MEDIA; MENSAL(°C)','UMIDADE RELATIVA DO AR; MEDIA MENSAL(%)','Ano Medicao']]
 
+    df_itirucu =  pd.read_csv('.\\estacoes\\dados_Itirucu.csv')
+    df_itirucu = df_itirucu.rename(columns={'Mes': 'Data Medicao'})
+    df_itirucu = df_itirucu.rename(columns={'Ano': 'Ano Medicao'})
+    df_itirucu = df_itirucu.rename(columns={'PRECIPITACAO TOTAL; DIARIO (AUT)(mm)': 'PRECIPITACAO TOTAL; MENSAL(mm)'})
+    df_itirucu = df_itirucu.rename(columns={'TEMPERATURA MEDIA; DIARIA (AUT)(Â°C)': 'TEMPERATURA MEDIA; MENSAL(°C)'})
+    df_itirucu = df_itirucu.rename(columns={'UMIDADE RELATIVA DO AR; MEDIA DIARIA (AUT)(%)': 'UMIDADE RELATIVA DO AR; MEDIA MENSAL(%)'})
+    
+    df_itirucu = df_itirucu[['Data Medicao','PRECIPITACAO TOTAL; MENSAL(mm)','TEMPERATURA MEDIA; MENSAL(°C)','UMIDADE RELATIVA DO AR; MEDIA MENSAL(%)','Ano Medicao']]
+    
+    
     #dataframe das ocorrências
     ocorrencias = pd.read_csv('.\\Gráficos_Tabelas\\ocorrencias_por_mes_ano.csv')
     
@@ -518,8 +542,8 @@ def main():
               'TEMPERATURA MEDIA; MENSAL(°C)', 'UMIDADE RELATIVA DO AR; MEDIA MENSAL(%)']
     
     for atributo in coluna:
-        atributoEstacao(atributo, df_lencois, df_piata, ocorrencias, anos)
-        atributoAno(atributo, df_lencois, df_piata, ocorrencias, anos)
+        atributoEstacao(atributo, df_lencois, df_piata, df_itirucu, ocorrencias, anos)
+        atributoAno(atributo, df_lencois, df_piata, df_itirucu, ocorrencias, anos)
 
 
 

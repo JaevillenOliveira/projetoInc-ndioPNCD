@@ -12,34 +12,34 @@ import numpy as np
 
 def main():
   
-        df_Estacao_Piata = pd.read_csv('dados_A430_D_2015-01-01_2019-12-31.csv')
+        df_Estacao = pd.read_csv('dados_A407_D_2015-01-01_2019-12-31.csv')
         
         #criando colunas
-        df_Estacao_Piata['Ano'] = 'NaN'
-        df_Estacao_Piata['Mes'] = 'NaN'
+        df_Estacao['Ano'] = 'NaN'
+        df_Estacao['Mes'] = 'NaN'
         
         #separando mês e ano 
-        for i in range(0, len(df_Estacao_Piata)):
-            df_Estacao_Piata['Ano'][i] = df_Estacao_Piata['Data Medicao'][i].split('-')[0]
-            df_Estacao_Piata['Mes'][i] = df_Estacao_Piata['Data Medicao'][i].split('-')[1]
+        for i in range(0, len(df_Estacao)):
+            df_Estacao['Ano'][i] = df_Estacao['Data Medicao'][i].split('-')[0]
+            df_Estacao['Mes'][i] = df_Estacao['Data Medicao'][i].split('-')[1]
         
         #excluindo datas
-        df_Estacao_Piata = df_Estacao_Piata.drop(columns=['Data Medicao'])
+        df_Estacao = df_Estacao.drop(columns=['Data Medicao'])
         
-        meses(df_Estacao_Piata)
+        meses(df_Estacao)
         
-        df_Estacao_Piata = separarMeses(df_Estacao_Piata)
+        df_Estacao = separarMeses(df_Estacao)
         
-        #dt.to_csv('dados_Piata.csv', index = False)
+        #df_Estacao.to_csv('dados_Itirucu.csv', index = False)
 
-        #tratarDados(df_Estacao_Piata)
-        colunas = df_Estacao_Piata.columns.tolist()
-        #colunas.remove(df_Estacao_Piata.columns[0])
+        #tratarDados(df_Estacao)
+        #colunas = df_Estacao.columns.tolist()
+        #colunas.remove(df_Estacao.columns[0])
         #colunas.remove('Latitude')
         #colunas.remove('Longitude')
         
         #for i in range(len(colunas)):
-            #plot_map(df_Estacao_Piata, colunas[i])
+            #plot_map(df_Estacao, colunas[i])
         
         
 ''' Média dos dias do mês '''
@@ -62,42 +62,42 @@ def separarMeses(df):
     return dt
 
 ''' Transformando meses para ficar mais legível . '''
-def meses(df_Estacao_Piata):
-    for i in range(len(df_Estacao_Piata)):
+def meses(df_Estacao):
+    for i in range(len(df_Estacao)):
 
-        if df_Estacao_Piata['Mes'][i] == '01':
-            df_Estacao_Piata['Mes'][i] = 'JAN'
-        elif df_Estacao_Piata['Mes'][i] == '02':
-            df_Estacao_Piata['Mes'][i] = 'FEV'
-        elif df_Estacao_Piata['Mes'][i] == '03':
-            df_Estacao_Piata['Mes'][i] = 'MAR'
-        elif df_Estacao_Piata['Mes'][i] == '04':
-            df_Estacao_Piata['Mes'][i] = 'ABR'
-        elif df_Estacao_Piata['Mes'][i] == '05':
-            df_Estacao_Piata['Mes'][i] = 'MAI'
-        elif df_Estacao_Piata['Mes'][i] == '06':
-            df_Estacao_Piata['Mes'][i] = 'JUN'
-        elif df_Estacao_Piata['Mes'][i] == '07':
-            df_Estacao_Piata['Mes'][i] = 'JUL'
-        elif df_Estacao_Piata['Mes'][i] == '08':
-            df_Estacao_Piata['Mes'][i] = 'AGO'
-        elif df_Estacao_Piata['Mes'][i] == '09':
-            df_Estacao_Piata['Mes'][i] = 'SET'
-        elif df_Estacao_Piata['Mes'][i] == '10':
-            df_Estacao_Piata['Mes'][i] = 'OUT'
-        elif df_Estacao_Piata['Mes'][i] == '11':
-            df_Estacao_Piata['Mes'][i] = 'NOV'
-        elif df_Estacao_Piata['Mes'][i] == '12':
-            df_Estacao_Piata['Mes'][i] = 'DEZ'
+        if df_Estacao['Mes'][i] == '01':
+            df_Estacao['Mes'][i] = 'JAN'
+        elif df_Estacao['Mes'][i] == '02':
+            df_Estacao['Mes'][i] = 'FEV'
+        elif df_Estacao['Mes'][i] == '03':
+            df_Estacao['Mes'][i] = 'MAR'
+        elif df_Estacao['Mes'][i] == '04':
+            df_Estacao['Mes'][i] = 'ABR'
+        elif df_Estacao['Mes'][i] == '05':
+            df_Estacao['Mes'][i] = 'MAI'
+        elif df_Estacao['Mes'][i] == '06':
+            df_Estacao['Mes'][i] = 'JUN'
+        elif df_Estacao['Mes'][i] == '07':
+            df_Estacao['Mes'][i] = 'JUL'
+        elif df_Estacao['Mes'][i] == '08':
+            df_Estacao['Mes'][i] = 'AGO'
+        elif df_Estacao['Mes'][i] == '09':
+            df_Estacao['Mes'][i] = 'SET'
+        elif df_Estacao['Mes'][i] == '10':
+            df_Estacao['Mes'][i] = 'OUT'
+        elif df_Estacao['Mes'][i] == '11':
+            df_Estacao['Mes'][i] = 'NOV'
+        elif df_Estacao['Mes'][i] == '12':
+            df_Estacao['Mes'][i] = 'DEZ'
         
         
 ''' Trata os dados com valores inconsistentes para NaN. '''
-def tratarDados(df_Estacao_Piata):
-    df_Estacao_Piata = df_Estacao_Piata.replace(-9999.0, np.nan)
+def tratarDados(df_Estacao):
+    df_Estacao = df_Estacao.replace(-9999.0, np.nan)
 
 
 #criando gráficos
-def plot_map(df_Estacao_Piata, atributo, ano):
+def plot_map(df_Estacao, atributo, ano):
     mesGeral = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ']
     mesJUL = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL']
     
@@ -109,7 +109,7 @@ def plot_map(df_Estacao_Piata, atributo, ano):
         mes = mesJUL
 
     for i in mes:
-        df_mes = df_Estacao_Piata[df_Estacao_Piata[df_Estacao_Piata.columns[0]].str.contains(i)]  
+        df_mes = df_Estacao[df_Estacao[df_Estacao.columns[0]].str.contains(i)]  
         media.append(df_mes[atributo].median())
     
     plt.bar(mes, media, color='#37777D')
